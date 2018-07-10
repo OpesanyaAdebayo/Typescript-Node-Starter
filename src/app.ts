@@ -20,6 +20,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //   }
 // }));
 
+
+app.use((req: Request, res: Response, next) => {
+  if (req.path !== '/') {
+      res.sendStatus(404)
+  }
+  else next()
+});
+
 app.get('/', homeController.index)
 
 
