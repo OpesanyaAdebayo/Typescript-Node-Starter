@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-dotenv.load();
+dotenv.config();
 import express from 'express';
 import { Request, Response } from 'express';
 import bodyParser from "body-parser";
@@ -20,7 +20,7 @@ app.set("views", path.join(__dirname, "../views"));
 app.set("view engine", "ejs");
 
 (<any>mongoose).Promise = bluebird;
-mongoose.connect(MLAB_URI, {useMongoClient: true}).then(
+mongoose.connect(MLAB_URI).then(
   () => { /** ready to use. The `mongoose.connect()` promise resolves to undefined. */ },
 ).catch(err => {
   console.log("MongoDB connection error. Please make sure MongoDB is running. " + err);
