@@ -47,16 +47,18 @@ app.use(session({
 //   }
 // }));
 
-import * as homeController from './controllers/home'
+import * as homeController from './controllers/home';
+import * as userController from './controllers/user';
 
-app.use((req: Request, res: Response, next) => {
-  if (req.path !== '/') {
-      res.sendStatus(404)
-  }
-  else next()
-});
 
 app.get('/', homeController.index)
+app.get('/login', userController.getLogin)
+app.get('/signup', userController.getSignup)
 
+app.use((req: Request, res: Response) => {
+  if (req.path !== '/' && req.path !== '/login' && req.path !== '/signup') {
+      res.sendStatus(404)
+  }
+});
 
 export default app;
