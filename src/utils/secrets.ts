@@ -1,3 +1,6 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 declare var process : {
     env: {
       MLAB_URI: string,
