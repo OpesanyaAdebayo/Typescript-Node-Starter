@@ -8,6 +8,7 @@
             "type": "node",
             "request": "launch",
             "name": "Debug",
+            "preLaunchTask": "typescript",
             "program": "${workspaceFolder}/src/server.ts",
             "cwd": "${workspaceFolder}",
             "protocol": "inspector",
