@@ -9,7 +9,7 @@ import path from 'path';
 const MongoStore = mongo(session);
 import { MLAB_URI, SESSION_SECRET } from './utils/secrets';
 import logger from './utils/logger';
-
+import { checkSignup } from './utils/validator'
 // import helmet from 'helmet';
 // Create Express server
 const app:express.Express = express();
@@ -53,6 +53,7 @@ import * as userController from './controllers/user';
 app.get('/', homeController.index)
 app.get('/login', userController.getLogin)
 app.get('/signup', userController.getSignup)
+app.post('/signup', checkSignup, userController.postSignup)
 
 app.use((req: Request, res: Response) => {
   if (req.path !== '/' && req.path !== '/login' && req.path !== '/signup') {
