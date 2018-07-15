@@ -5,10 +5,10 @@ import DotenvResult from 'dotenv';
 const env = dotenv.config();
 dotenv.load();
 
-if (env.error) {
-  logger.error("Cannot find a .env file.");
-  process.exit(1)
-}
+// if (env.error) {
+//   logger.error("Cannot find a .env file.");
+//   process.exit(1)
+// }
 
 const parsed = env.parsed!;
 export const MLAB_URI = parsed["MLAB_URI"]
