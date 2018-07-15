@@ -5,6 +5,11 @@ import DotenvResult from 'dotenv';
 const env = dotenv.config({path: '.env'});
 dotenv.load();
 
+if (env.error) {
+  logger.error("Cannot find a .env file.");
+  process.exit(1)
+}
+
 const parsed = env.parsed!;
 export const MLAB_URI = parsed["MLAB_URI"]
 export const SESSION_SECRET = parsed["SESSION_SECRET"];
