@@ -14,3 +14,28 @@ describe("GET /signup", () => {
       .expect(200, done);
   });
 });
+
+
+describe("POST /signup", () => {
+  it("should return error when passowrd is less than 7 characters.", (done) => {
+    request(app).post("/signup")
+    .field("email", "")
+    .field("password", "vbrmts")
+    .end(function (err, res) {
+      expect(res.error).toBeTruthy;
+      done();
+    })
+    .expect(302)
+  });
+
+  it("should return error when email is invalid.", (done) => {
+    request(app).post("/signup")
+    .field("email", "kjfnfksg")
+    .field("password", "vbrijims")
+    .end(function (err, res) {
+      expect(res.error).toBeTruthy;
+      done();
+    })
+    .expect(302)
+  });
+})
