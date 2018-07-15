@@ -2,7 +2,7 @@ import logger from './logger';
 import fs from 'fs';
 import dotenv from 'dotenv';
 import DotenvResult from 'dotenv';
-const env = dotenv.config({path: '.env'});
+const env = dotenv.config();
 dotenv.load();
 
 if (env.error) {
