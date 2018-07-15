@@ -6,6 +6,11 @@
   "directories": {
     "test": "test"
   },
+  "engine-strict": true,
+  "engines": {
+    "node": "10.0.0",
+    "npm": "6.0.1"
+  },
   "scripts": {
     "watch-serve": "nodemon dist/server.js",
     "serve": "node dist/server.js",
