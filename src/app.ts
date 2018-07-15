@@ -6,8 +6,11 @@ import mongo from 'connect-mongo';
 import mongoose from "mongoose";
 import bluebird from "bluebird";
 import path from 'path';
+import dotenv from 'dotenv';
+dotenv.config();
 const MongoStore = mongo(session);
 import { MLAB_URI, SESSION_SECRET } from './utils/secrets';
+import logger from './utils/logger';
 
 // import helmet from 'helmet';
 // Create Express server
