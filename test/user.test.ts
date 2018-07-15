@@ -22,7 +22,7 @@ describe("POST /signup", () => {
     .field("email", "")
     .field("password", "vbrmts")
     .end(function (err, res) {
-      expect(res.error).toBeTruthy;
+      expect(res.error).not.toBe(undefined);
       done();
     })
     .expect(302)
@@ -33,7 +33,7 @@ describe("POST /signup", () => {
     .field("email", "kjfnfksg")
     .field("password", "vbrijims")
     .end(function (err, res) {
-      expect(res.error).toBeTruthy;
+      expect(res.error).not.toBe(undefined);
       done();
     })
     .expect(302)
