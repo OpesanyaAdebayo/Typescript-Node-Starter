@@ -12,6 +12,7 @@
     "npm": "6.0.1"
   },
   "scripts": {
+    "start": "node dist/server.js",
     "watch-serve": "nodemon dist/server.js",
     "serve": "node dist/server.js",
     "build-ts": "tsc",
