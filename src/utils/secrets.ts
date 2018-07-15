@@ -14,10 +14,8 @@ export const SESSION_SECRET = process.env.SESSION_SECRET;
 
 if (!SESSION_SECRET) {
   logger.error("No client secret. Set SESSION_SECRET environment variable.");
-  // process.exit(1);
 }
 
 if (!MLAB_URI) {
   logger.error("No mongo connection string. Set MLAB_URI environment variable.");
-  // process.exit(1);
 }
