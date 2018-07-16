@@ -6,5 +6,6 @@
     "npm run test"
   ],
   env:
-  - NODE_ENV=test
+  - SESSION_SECRET=$SESSION_SECRET,
+  - MLAB_URI=$MLAB_URI
 }
