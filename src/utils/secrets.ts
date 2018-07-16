@@ -10,9 +10,9 @@ dotenv.load();
 //   process.exit(1)
 // }
 
-const parsed = env.parsed!;
-export const MLAB_URI = parsed["MLAB_URI"]
-export const SESSION_SECRET = parsed["SESSION_SECRET"];
+const parsed = env.parsed! || process.env;
+export const MLAB_URI = parsed["MLAB_URI"] || process.env.MLAB_URI!
+export const SESSION_SECRET = parsed["SESSION_SECRET"] || process.env.SESSION_SECRET!;
 
 
 if (!SESSION_SECRET) {

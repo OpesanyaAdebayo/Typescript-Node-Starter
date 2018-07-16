@@ -1,7 +1,3 @@
-import dotenv from "dotenv";
-const env = dotenv.config();
-
-dotenv.load();
 import express from 'express';
 import { Request, Response } from 'express';
 import bodyParser from "body-parser";
