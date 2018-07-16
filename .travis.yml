@@ -2,10 +2,7 @@
   "language": "node_js",
   "node_js": "8",
   "script": [
-    "npm run build-ts",
+    "npm run build",
     "npm run test"
-  ],
-  env:
-  - SESSION_SECRET=$SESSION_SECRET,
-  - MLAB_URI=$MLAB_URI
+  ]
 }
