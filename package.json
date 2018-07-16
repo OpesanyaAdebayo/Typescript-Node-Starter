@@ -60,9 +60,5 @@
     "ts-jest": "^22.4.6",
     "tslint": "^5.10.0",
     "typescript": "^2.9.2"
-  },
-  "activationEvents": [
-    "workspaceContains:node_modules/.bin/jest",
-    "onCommand:io.orta.jest.start"
-  ]
+  }
 }
