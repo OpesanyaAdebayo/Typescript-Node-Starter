@@ -12,8 +12,8 @@ describe("POST /login", () => {
   it("should return error when password is less than 7 characters.", (done) => {
     return request(app)
       .post("/login")
-      .send("email=meet@me.com")
-      .send("password=zcqwpo")
+      .send({email: "meet@me.com"})
+      .send({password: "zcqwpo"})
       .expect(401)
       .end(function(err, res) {
         expect(res.body.error).not.toBe(undefined);
@@ -23,8 +23,8 @@ describe("POST /login", () => {
   it("should return error when email is invalid.", (done) => {
     return request(app)
       .post("/login")
-      .send("email=meetme.com")
-      .send("password=vbrmtws")
+      .send({ email: "meetme.com" })
+      .send({ password: "zcqwpfo" })
       .expect(401)
       .end(function(err, res) {
         expect(res.body.error).not.toBe(undefined);
@@ -33,8 +33,8 @@ describe("POST /login", () => {
   });
   it("should return some defined error message with valid parameters", (done) => {
     return request(app).post("/login")
-      .send("email=john@me.com")
-      .send("password=qwerty3")
+      .send({ email: "meet@me.com" })
+      .send({ password: "zcqwpo9" })
       .expect(401)
       .end(function (err, res) {
         expect(res.body.error).not.toBe(undefined)
@@ -57,8 +57,8 @@ describe("POST /signup", () => {
   it("should return error when password is less than 7 characters.", (done) => {
     return request(app)
       .post("/signup")
-      .send("email=fre")
-      .send("password=vbrmts")
+      .send({ email: "meet@me.com" })
+      .send({ password: "zcqwpo" })
       .expect(302)
       .end(function(err, res) {
         expect(res.body.error).not.toBe(undefined);
@@ -69,8 +69,8 @@ describe("POST /signup", () => {
   it("should return error when email is invalid.", (done) => {
     return request(app)
       .post("/signup")
-      .send("email=bayytfg")
-      .send("password=vbrijims")
+      .send({ email: "meetme.com" })
+      .send({ password: "zcqwpo4" })
       .expect(302)
       .end(function(err, res) {
         expect(res.body.error).not.toBe(undefined);
