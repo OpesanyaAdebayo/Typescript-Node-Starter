@@ -52,6 +52,7 @@ import * as userController from './controllers/user';
 
 app.get('/', homeController.index)
 app.get('/login', userController.getLogin)
+app.post('/login', checkSignup, userController.postLogin)
 app.get('/signup', userController.getSignup)
 app.post('/signup', checkSignup, userController.postSignup)
 
