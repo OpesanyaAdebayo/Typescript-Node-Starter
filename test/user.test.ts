@@ -10,32 +10,34 @@ describe("GET /login", () => {
 
 describe("POST /login", () => {
   it("should return error when password is less than 7 characters.", (done) => {
-    return request(app).post("/signup")
-      .field("email", "")
-      .field("password", "vbrmts")
-      .end(function (err, res) {
-        expect(res.error).not.toBe(true);
+    return request(app)
+      .post("/login")
+      .send("email=meet@me.com")
+      .send("password=zcqwpo")
+      .expect(401)
+      .end(function(err, res) {
+        expect(res.body.error).not.toBe(undefined);
         done();
-      })
-      .expect(302)
+      });
   });
   it("should return error when email is invalid.", (done) => {
-    return request(app).post("/signup")
-      .field("email", "bayytfg")
-      .field("password", "vbrijims")
-      .end(function (err, res) {
-        expect(res.error).not.toBe(true);
+    return request(app)
+      .post("/login")
+      .send("email=meetme.com")
+      .send("password=vbrmtws")
+      .expect(401)
+      .end(function(err, res) {
+        expect(res.body.error).not.toBe(undefined);
         done();
       })
-      .expect(302)
   });
   it("should return some defined error message with valid parameters", (done) => {
     return request(app).post("/login")
-      .field("email", "john@me.com")
-      .field("password", "Hunter2")
-      .expect(302)
+      .send("email=john@me.com")
+      .send("password=qwerty3")
+      .expect(401)
       .end(function (err, res) {
-        expect(res.error).not.toBe(undefined)
+        expect(res.body.error).not.toBe(undefined)
         done();
       });
 
@@ -53,25 +55,27 @@ describe("GET /signup", () => {
 
 describe("POST /signup", () => {
   it("should return error when password is less than 7 characters.", (done) => {
-    return request(app).post("/signup")
-    .field("email", "")
-    .field("password", "vbrmts")
-    .end(function (err, res) {
-      expect(res.error).not.toBe(true);
-      done();
-    })
-    .expect(302)
+    return request(app)
+      .post("/signup")
+      .send("email=fre")
+      .send("password=vbrmts")
+      .expect(302)
+      .end(function(err, res) {
+        expect(res.body.error).not.toBe(undefined);
+        done();
+      });
   });
 
   it("should return error when email is invalid.", (done) => {
-    return request(app).post("/signup")
-    .field("email", "bayytfg")
-    .field("password", "vbrijims")
-    .end(function (err, res) {
-      expect(res.error).not.toBe(true);
-      done();
-    })
-    .expect(302)
+    return request(app)
+      .post("/signup")
+      .send("email=bayytfg")
+      .send("password=vbrijims")
+      .expect(302)
+      .end(function(err, res) {
+        expect(res.body.error).not.toBe(undefined);
+        done();
+      });
   });
 })
 
