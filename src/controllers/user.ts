@@ -6,12 +6,11 @@ import {
 import { validationResult } from 'express-validator/check';
 import mongoose from 'mongoose';
 import {default as User, userModel,} from '../models/User';
-import { execSync } from "child_process";
 
 export let getLogin = (req: Request, res: Response) => {
     let { userID } = req.session!;
     if (userID) {
-        res.redirect("/");
+        return res.redirect("/");
     }
     res.render("login", {
         title: "Login"
@@ -21,8 +20,8 @@ export let getLogin = (req: Request, res: Response) => {
 export let postLogin = (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(302).json({
-            errors: errors.array()
+        return res.status(401).json({
+            error: errors.array()
         });
     }
 
@@ -41,8 +40,15 @@ export let postLogin = (req: Request, res: Response, next: NextFunction) => {
                     req.session!.userID = existingUser._id.toString();
                     return res.redirect('/');
                 }
-                return res.json({ error: "Incorrect username and/or password." });
+                else {
+                    return res.status(401).json({ error: "Incorrect username and/or password." });
+                }
             })
+        }
+        else {
+            return res
+                .status(401)
+                .json({ error: "Incorrect username and/or password." });
         }
     })
 
@@ -61,8 +67,8 @@ export let postSignup = (req: Request, res: Response, next: NextFunction) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    return res.status(302).json({
-      errors: errors.array()
+    return res.status(401).json({
+      error: errors.array()
     });
   }
 
@@ -75,7 +81,7 @@ export let postSignup = (req: Request, res: Response, next: NextFunction) => {
     if (err) return next(err);
     if (existingUser) {
       res
-        .status(302)
+        .status(401)
         .json({ error: "account with that email already exists." });
     }
     user
