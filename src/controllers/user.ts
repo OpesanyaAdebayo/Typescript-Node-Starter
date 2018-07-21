@@ -86,8 +86,8 @@ export let postSignup = (req: Request, res: Response, next: NextFunction) => {
     }
     user
       .save()
-      .then(savedUser => {
-        req.session!.userID = savedUser._id.toString();
+        .then(savedUser => {
+            req.session!.userID = savedUser._id.toString();
         return res.redirect("/");
       })
       .catch(err => {
@@ -95,3 +95,42 @@ export let postSignup = (req: Request, res: Response, next: NextFunction) => {
       });
   });
 };
+
+export let getChangePassword = (req: Request, res: Response, next: NextFunction) => {
+    let { userID } = req.session!;
+    if (!userID) {
+        res
+          .status(401)
+          .json({ error: "You must be logged in to view this page" });
+    }
+    res.redirect('/');
+}
+
+export let postChangePassword = (req: Request, res: Response, next: NextFunction) => {
+
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        return res.status(401).json({
+            error: errors.array()
+        });
+    }
+    let { userID } = req.session!;
+    if (!userID) {
+        res
+            .status(403)
+            .json({ error: "You must be logged in to view this page" });
+    }
+    User.findById(req.session!.userID, (err, user: userModel) => {
+        if (err) {
+            return next(err)
+        }
+        user.password = req.body.password;
+        user.save(err => {
+            if (err) { return next(err) }
+            else {
+                res.redirect("/");
+            }
+        })
+    });
+}
