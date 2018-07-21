@@ -79,3 +79,38 @@ describe("POST /signup", () => {
   });
 })
 
+describe("POST /changePassword", () => {
+  it("should return error when password is less than 7 characters.", done => {
+    return request(app)
+      .post("/changePassword")
+      .send({ password: "zcqwpo" })
+      .send({ confirmPassword: "zcqwpo" })
+      .expect(401)
+      .end(function(err, res) {
+        expect(res.body.error).not.toBe(undefined);
+        done();
+      });
+  });
+  it("should return error when passwords do not match.", done => {
+    return request(app)
+      .post("/changePassword")
+      .send({ password: "zcqwpo7" })
+      .send({ confirmPassword: "zcqwp7o" })
+      .expect(401)
+      .end(function(err, res) {
+        expect(res.body.error).not.toBe(undefined);
+        done();
+      });
+  });
+  it("should return error when user isn't logged in.", done => {
+    return request(app)
+      .post("/changePassword")
+      .send({ password: "zcqwp6o" })
+      .send({ confirmPassword: "zcqwp6o" })
+      .expect(403)
+      .end(function(err, res) {
+        expect(res.body.error).not.toBe(undefined);
+        done();
+      });
+  });
+});
