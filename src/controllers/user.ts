@@ -1,8 +1,8 @@
 import {
     Request,
-    Response,
-    NextFunction
+    Response
 } from "express";
+import { NextFunction } from 'connect';
 import { validationResult } from 'express-validator/check';
 import mongoose from 'mongoose';
 import {default as User, userModel,} from '../models/User';
