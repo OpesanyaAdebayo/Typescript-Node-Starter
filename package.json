@@ -32,7 +32,7 @@
     "express": "^4.16.3",
     "express-session": "^1.15.6",
     "express-validator": "^5.2.0",
-    "mongoose": "^5.2.2",
+    "mongoose": "^5.2.6",
     "winston": "^3.0.0"
   },
   "devDependencies": {
@@ -44,12 +44,14 @@
     "@types/express-session": "^1.15.10",
     "@types/jest": "^23.3.0",
     "@types/minimatch": "^3.0.3",
+    "@types/mongoose": "^5.2.3",
     "@types/node": "^10.5.2",
     "@types/shelljs": "^0.8.0",
     "@types/supertest": "^2.0.4",
     "@types/winston": "^2.3.9",
     "jest": "^23.4.1",
     "jest-cli": "^23.4.1",
+    "mongodb-memory-server": "^1.9.3",
     "nodemon": "^1.17.5",
     "shelljs": "^0.8.2",
     "supertest": "^3.1.0",
