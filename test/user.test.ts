@@ -31,17 +31,7 @@ describe("POST /login", () => {
         done();
       })
   });
-  it("should return some defined error message with valid parameters", (done) => {
-    return request(app).post("/login")
-      .send({ email: "meet@me.com" })
-      .send({ password: "zcqwpo9" })
-      .expect(401)
-      .end(function (err, res) {
-        expect(res.body.error).not.toBe(undefined)
-        done();
-      });
 
-  });
 });
 
 
@@ -102,15 +92,5 @@ describe("POST /changePassword", () => {
         done();
       });
   });
-  it("should return error when user isn't logged in.", done => {
-    return request(app)
-      .post("/changePassword")
-      .send({ password: "zcqwp6o" })
-      .send({ confirmPassword: "zcqwp6o" })
-      .expect(403)
-      .end(function(err, res) {
-        expect(res.body.error).not.toBe(undefined);
-        done();
-      });
-  });
+
 });
