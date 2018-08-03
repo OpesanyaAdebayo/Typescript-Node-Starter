@@ -121,16 +121,18 @@ export let postChangePassword = (req: Request, res: Response, next: NextFunction
             .status(403)
             .json({ error: "You must be logged in to view this page" });
     }
-    User.findById(req.session!.userID, (err, user: userModel) => {
-        if (err) {
-            return next(err)
-        }
-        user.password = req.body.password;
-        user.save(err => {
-            if (err) { return next(err) }
-            else {
-                res.redirect("/");
+    else {
+        User.findById(req.session!.userID, (err, user: userModel) => {
+            if (err) {
+                return next(err)
             }
-        })
-    });
+            user.password = req.body.password;
+            user.save(err => {
+                if (err) { return next(err) }
+                else {
+                    res.redirect("/");
+                }
+            })
+        });
+    }
 }
