@@ -44,6 +44,7 @@
     "@types/express-session": "^1.15.10",
     "@types/jest": "^23.3.0",
     "@types/minimatch": "^3.0.3",
+    "@types/mongodb-memory-server": "^1.8.0",
     "@types/mongoose": "^5.2.3",
     "@types/node": "^10.5.2",
     "@types/shelljs": "^0.8.0",
