@@ -6,7 +6,7 @@ import User from '../src/models/User';
 
 // May require additional time for downloading MongoDB binaries.
 // Visit https://github.com/nodkz/mongodb-memory-server tof details
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 600000;
+// jasmine.DEFAULT_TIMEOUT_INTERVAL = 600000;
 
 
 let con;
@@ -55,9 +55,9 @@ describe("Signup", () => {
 describe("Login", () => {
     it("should redirect a user to dashboard when logged in", async () => {
         let res = await request(app)
-          .post("/login")
-          .send({ email: "meetus@gmail.com" })
-          .send({ password: "zbgccdd" });
+            .post("/login")
+            .send({ email: "meetus@gmail.com" })
+            .send({ password: "zbgccdd" });
         expect(res.status).toBe(302);
     });
 
@@ -83,11 +83,11 @@ describe("Login", () => {
 describe("Change Password", () => {
     it("should return error when user isn't logged in.", async () => {
         let res = await request(app)
-          .post("/changePassword")
+            .post("/changePassword")
             .send({ password: "zbgccdd" })
             .send({ confirmPassword: "zbgccdd" });
         expect(res.status).toBe(403);
         expect(res.body.error).toBe("You must be logged in to view this page");
-  });
+    });
 
 });
