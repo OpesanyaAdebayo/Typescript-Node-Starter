@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { HookNextFunction } from 'mongoose';
 import bcrypt from 'bcrypt';
 export type userModel = mongoose.Document & {
     email: string,
@@ -11,7 +11,7 @@ const userSchema = new mongoose.Schema({
     password: { type: String },
 });
 
-userSchema.pre("save", function save(this: userModel, next) {
+userSchema.pre("save", function save(this: userModel, next: HookNextFunction) {
     const user = this;
     if (!user.isModified("password")) { return next(); }
     bcrypt.genSalt(10, (err, salt) => {
