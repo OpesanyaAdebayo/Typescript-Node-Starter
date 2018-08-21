@@ -19,12 +19,20 @@ app.set("views", path.join(__dirname, "../views"));
 app.set("view engine", "ejs");
 
 (<any>mongoose).Promise = bluebird;
-mongoose.connect(MLAB_URI).then(
-  () => { /** ready to use. The `mongoose.connect()` promise resolves to undefined. */ },
-).catch(err => {
-  console.log("MongoDB connection error. Please make sure MongoDB is running. " + err);
-  // process.exit();
-});
+mongoose
+  .connect(
+    MLAB_URI,
+    { useNewUrlParser: true }
+  )
+  .then(() => {
+    /** ready to use. The `mongoose.connect()` promise resolves to undefined. */
+  })
+  .catch(err => {
+    console.log(
+      "MongoDB connection error. Please make sure MongoDB is running. " + err
+    );
+    // process.exit();
+  });
 
 app.set("port", process.env.PORT || 4000);
 app.use(bodyParser.json());
