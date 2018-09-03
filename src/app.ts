@@ -2,15 +2,14 @@ import express from 'express';
 import { Request, Response } from 'express';
 import bodyParser from "body-parser";
 import session from "express-session";
-import mongo from 'connect-mongo';
 import mongoose from "mongoose";
 import bluebird from "bluebird";
 import path from 'path';
-const MongoStore = mongo(session);
+const MongoStore = require("connect-mongo")(session);
 import { MLAB_URI, SESSION_SECRET } from './utils/secrets';
 import logger from './utils/logger';
 import { checkInput, checkChangePasswordInput } from './utils/validator'
-// import helmet from 'helmet';
+
 // Create Express server
 const app:express.Express = express();
 
