@@ -1,74 +1,41 @@
 import express from 'express';
-import { Request, Response } from 'express';
-import bodyParser from "body-parser";
-import session from "express-session";
-import mongoose from "mongoose";
-import bluebird from "bluebird";
+import mongoose from 'mongoose';
 import path from 'path';
-const MongoStore = require("connect-mongo")(session);
-import { MLAB_URI, SESSION_SECRET } from './utils/secrets';
+import { DATABASE_URL } from './utils/secrets';
 import logger from './utils/logger';
-import { checkInput, checkChangePasswordInput } from './utils/validator'
+
+import * as homeRoute from './requestHandlers/home';
+import * as userRoute from './requestHandlers/user';
 
 // Create Express server
-const app:express.Express = express();
+const app: express.Express = express();
 
+app.set('views', path.join(__dirname, '../views'));
+app.set('view engine', 'ejs');
 
-app.set("views", path.join(__dirname, "../views"));
-app.set("view engine", "ejs");
-
-(<any>mongoose).Promise = bluebird;
 mongoose
-  .connect(
-    MLAB_URI,
-    { useNewUrlParser: true }
-  )
+  .connect(DATABASE_URL, { useNewUrlParser: true })
   .then(() => {
-    /** ready to use. The `mongoose.connect()` promise resolves to undefined. */
+    logger.info('Database connected');
   })
-  .catch(err => {
-    console.log(
-      "MongoDB connection error. Please make sure MongoDB is running. " + err
-    );
+  .catch((err) => {
+    console.log('MongoDB connection error. Please make sure MongoDB is running. ' + err);
     // process.exit();
   });
 
-app.set("port", process.env.PORT || 4000);
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.set('port', process.env.PORT || 4000);
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
-app.use(session({
-  resave: true,
-  saveUninitialized: true,
-  secret: SESSION_SECRET,
-  store: new MongoStore({
-    url: MLAB_URI,
-    autoReconnect: true
-  })
-}));
+app.get('/', homeRoute.index);
+app.post('/login', userRoute.login);
+app.post('/signup', userRoute.signup);
 
-// app.use(helmet({
-//   frameguard: {
-//     action: 'deny'
-//   }
-// }));
-
-import * as homeController from './controllers/home';
-import * as userController from './controllers/user';
-
-
-app.get('/', homeController.index)
-app.get('/login', userController.getLogin)
-app.post('/login', checkInput, userController.postLogin)
-app.get('/signup', userController.getSignup)
-app.post('/signup', checkInput, userController.postSignup)
-app.post("/changePassword", checkChangePasswordInput, userController.postChangePassword);
-
-
-app.use((req: Request, res: Response) => {
-  if (req.path !== '/' && req.path !== '/login' && req.path !== '/signup') {
-      res.sendStatus(404)
-  }
+app.use((_req, res): void => {
+  res.status(404).send({
+    success: false,
+    error: 'resource not found',
+  });
 });
 
 export default app;
