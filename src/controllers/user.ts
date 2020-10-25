@@ -1,138 +1,71 @@
-import {
-    Request,
-    Response
-} from "express";
-import { NextFunction } from 'connect';
-import { validationResult } from 'express-validator/check';
-import mongoose from 'mongoose';
-import {default as User, userModel,} from '../models/User';
+import joi from 'joi';
+import { signPayload } from '../helpers/jwt';
+import { validateInput } from '../helpers/validator';
+import { findUser, createUser } from '../repositories/user';
 
-export let getLogin = (req: Request, res: Response) => {
-    let { userID } = req.session!;
-    if (userID) {
-        return res.redirect("/");
-    }
-    res.render("login", {
-        title: "Login"
-    });
+interface IHelperResponse {
+  success: boolean;
+  status: number;
+  data?: { token: string };
+  error?: string;
+  message?: string;
 }
-
-export let postLogin = (req: Request, res: Response, next: NextFunction) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(401).json({
-            error: errors.array()
-        });
-    }
-
-    const user = new User({
-        email: req.body.email,
-        password: req.body.password
-    });
-
-
-    User.findOne({ email: req.body.email }, (err, existingUser:any) => {
-        if (err) { return next(err) };
-        if (existingUser) {
-            existingUser.comparePassword(req.body.password, (err: Error, isMatch: boolean) => {
-                if (err) { return next(err) };
-                if (isMatch) {
-                    req.session!.userID = existingUser._id.toString();
-                    return res.redirect('/');
-                }
-                else {
-                    return res.status(401).json({ error: "Incorrect username and/or password." });
-                }
-            })
-        }
-        else {
-            return res
-                .status(401)
-                .json({ error: "Incorrect username and/or password." });
-        }
-    })
-
-}
-export let getSignup = (req: Request, res: Response) => {
-    let { userID } = req.session!;
-    if (userID) {
-        res.redirect("/");
-    }
-    res.render("signup", {
-        title: "Signup"
-    });
-}
-
-export let postSignup = (req: Request, res: Response, next: NextFunction) => {
-  const errors = validationResult(req);
-
-  if (!errors.isEmpty()) {
-    return res.status(401).json({
-      error: errors.array()
-    });
+export const loginController = async (email: string, password: string): Promise<IHelperResponse> => {
+  const validationSchema = joi.object({
+    email: joi.string().email(),
+    password: joi.string().min(5),
+  });
+  const validationResult = validateInput(validationSchema, { email, password });
+  if (validationResult.error) {
+    return {
+      success: false,
+      status: 400,
+      error: validationResult.error,
+    };
+  }
+  const user = await findUser({ email });
+  if (!user) {
+    return { success: false, status: 401, error: 'Incorrect username and/or password.' };
+  }
+  const passwordMatch = await user.comparePassword(password);
+  if (!passwordMatch) {
+    return { success: false, status: 401, error: 'Incorrect username and/or password.' };
   }
 
-  const user = new User({
-    email: req.body.email,
-    password: req.body.password
-  });
-
-  User.findOne({ email: req.body.email }, (err, existingUser) => {
-    if (err) return next(err);
-    if (existingUser) {
-      res
-        .status(401)
-        .json({ error: "account with that email already exists." });
-    }
-    user
-      .save()
-        .then(savedUser => {
-            req.session!.userID = savedUser._id.toString();
-        return res.redirect("/");
-      })
-      .catch(err => {
-        if (err) return next(err);
-      });
-  });
+  return {
+    success: true,
+    status: 200,
+    message: 'Login successful',
+    data: { token: signPayload({ id: user.id }) },
+  };
 };
 
-export let getChangePassword = (req: Request, res: Response, next: NextFunction) => {
-    let { userID } = req.session!;
-    if (!userID) {
-        res
-          .status(401)
-          .json({ error: "You must be logged in to view this page" });
-    }
-    res.redirect('/');
-}
-
-export let postChangePassword = (req: Request, res: Response, next: NextFunction) => {
-
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-        return res.status(401).json({
-            error: errors.array()
-        });
-    }
-    let { userID } = req.session!;
-    if (!userID) {
-        res
-            .status(403)
-            .json({ error: "You must be logged in to view this page" });
-    }
-    else {
-        User.findById(req.session!.userID, (err, user: userModel) => {
-            if (err) {
-                return next(err)
-            }
-            user.password = req.body.password;
-            user.save(err => {
-                if (err) { return next(err) }
-                else {
-                    res.redirect("/");
-                }
-            })
-        });
-    }
-}
+export const signupController = async (email: string, password: string): Promise<IHelperResponse> => {
+  const validationSchema = joi.object({
+    email: joi.string().email(),
+    password: joi.string().min(5),
+  });
+  const validationResult = validateInput(validationSchema, { email, password });
+  if (validationResult.error) {
+    return {
+      success: false,
+      status: 400,
+      error: validationResult.error,
+    };
+  }
+  const existingUser = await findUser({ email });
+  if (existingUser) {
+    return {
+      success: false,
+      status: 400,
+      error: 'Invalid username and/or password.',
+    };
+  }
+  const user = await createUser({ email, password });
+  return {
+    success: true,
+    status: 200,
+    message: 'Account successfully created',
+    data: { token: signPayload({ id: user.id }) },
+  };
+};
