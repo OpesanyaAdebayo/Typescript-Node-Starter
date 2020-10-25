@@ -1,58 +1,38 @@
-import mongoose, { HookNextFunction } from "mongoose";
-import bcrypt from "bcrypt";
-export type userModel = mongoose.Document & {
+import mongoose, { HookNextFunction } from 'mongoose';
+import bcrypt from 'bcrypt';
+
+export interface fields {
+  id: mongoose.Types.ObjectId;
   email: string;
   password: string;
   comparePassword: comparePasswordFunction;
-};
+}
+
+export type userModel = mongoose.Document & fields;
 
 const userSchema = new mongoose.Schema({
   email: { type: String, unique: true },
-  password: { type: String }
+  password: { type: String },
 });
 
-userSchema.pre("save", function save(next: HookNextFunction) {
-  const user = this;
-  if (!user.isModified("password")) {
+userSchema.pre<userModel>('save', function (next: HookNextFunction) {
+  if (!this.isModified('password')) {
     return next();
   }
-  bcrypt.genSalt(10, (err, salt) => {
-    if (err) {
-      return next(err);
-    }
-    // @ts-ignore
-    bcrypt.hash(user.password, salt, (err, hash) => {
-      if (err) {
-        return next(err);
-      }
-      // @ts-ignore
-      user.password = hash;
-      next();
-    });
-  });
+  const salt = bcrypt.genSaltSync(10);
+  const hash = bcrypt.hashSync(this.password, salt);
+  this.password = hash;
+  next();
 });
 
-type comparePasswordFunction = (
-  candidatePassword: string,
-  cb: (err: any, isMatch: any) => {}
-) => void;
+type comparePasswordFunction = (userPassword: string) => Promise<boolean>;
 
-const comparePassword: comparePasswordFunction = function(
-  this: any,
-  candidatePassword,
-  cb
-) {
-  bcrypt.compare(
-    candidatePassword,
-    this.password,
-    (err: mongoose.Error, isMatch: boolean) => {
-      cb(err, isMatch);
-    }
-  );
+const comparePassword: comparePasswordFunction = function (this: userModel, userPassword: string) {
+  return bcrypt.compare(userPassword, this.password);
 };
 
 userSchema.methods.comparePassword = comparePassword;
 
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model<userModel>('User', userSchema);
 
 export default User;
