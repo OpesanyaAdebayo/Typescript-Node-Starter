@@ -36,4 +36,4 @@ Simple starter Node.js Application with Typescript
 
     `npm run start`
 
-7. Visit `localhost:4000` and you should see the homepage.
+7. Endpoints can be accessed on `localhost:4000`.
